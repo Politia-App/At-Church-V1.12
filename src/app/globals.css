@@ -11,12 +11,12 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #090d16;
+  background-color: #f8fafc;
 }
 
-/* Standalone Dark Mode Shared Background */
+/* Standalone Light Mode Shared Background */
 .shared-bg {
-  background-image: linear-gradient(rgba(9, 13, 22, 0.9), rgba(9, 13, 22, 0.97)), url('/images/splash-bg.jpg');
+  background-image: linear-gradient(rgba(248, 250, 252, 0.85), rgba(248, 250, 252, 0.95)), url('/images/splash-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

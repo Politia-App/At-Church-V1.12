@@ -34,10 +34,10 @@ export default function SplashPage() {
           alt="At Church Logo"
           className="logo-icon h-48 w-48 object-contain mb-6 drop-shadow-2xl"
         />
-        <h1 className="font-serif text-5xl font-bold text-slate-100 tracking-tight text-center">
+        <h1 className="font-serif text-5xl font-bold text-slate-900 tracking-tight text-center">
           At Church - Coptic Orthodox
         </h1>
-        <p className="text-base text-slate-400 mt-2 mb-8 tracking-widest uppercase font-medium text-center">
+        <p className="text-base text-slate-600 mt-2 mb-8 tracking-widest uppercase font-medium text-center">
           Anchored in Faith, Connected in Love
         </p>
         <div className="spinner"></div>
