@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>At Church - Coptic Orthodox Dashboard</title>
+  
+  <!-- FontAwesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Firebase SDK Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Authentication Checker (Runs immediately before page load to avoid screen flicker) -->
+  <script src="js/auth.js"></script>
+</head>
+<body>
+
+  <!-- Full App Wrapper -->
+  <div class="app-container">
+    
+    <!-- Sidebar Container (Injected by main.js) -->
+    <aside id="sidebar-container" class="sidebar"></aside>
+
+    <!-- Content Area -->
+    <div style="flex-grow: 1; display: flex; flex-direction: column;">
+      
+      <!-- Header Container (Injected by main.js) -->
+      <header id="header-container" class="header"></header>
+
+      <!-- Main Dashboard Content -->
+      <main class="main-content fade-in">
+        
+        <!-- Welcome banner -->
+        <div style="margin-bottom: 2rem;">
+          <h1 style="font-size: 2.25rem; color: var(--text-primary); margin-bottom: 0.5rem;" class="coptic-title">
+            <span data-translate-key="welcome">Welcome Back,</span> <span class="user-name" style="color: var(--accent);">User</span>
+          </h1>
+          <p style="color: var(--text-secondary); font-size: 1rem;" data-translate-key="blessing">
+            "Peace be to this house and to all that dwell in it." Have a blessed day.
+          </p>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <section class="stats-grid">
+          
+          <div class="glass-card stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">June 14</span>
+              <span class="stat-label" data-translate-key="next_liturgy">Next Liturgy Booking</span>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <div class="stat-icon accent">
+              <i class="fa-solid fa-hands-praying"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">June 18</span>
+              <span class="stat-label" data-translate-key="confession">Confession Session</span>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">2 / Month</span>
+              <span class="stat-label" data-translate-key="reserved">Reserved Services</span>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <div class="stat-icon accent">
+              <i class="fa-solid fa-cross"></i>
+            </div>
+            <div class="stat-info">
+              <span class="stat-number">Coptic Youth</span>
+              <span class="stat-label" data-translate-key="class_group">Spiritual Class Group</span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Featured Section (Hero Quote and Katameros Readings) -->
+        <section class="hero-section">
+          
+          <!-- Quote Card -->
+          <div class="glass-card quote-card">
+            <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+              <div>
+                <h3 style="font-size: 0.8rem; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
+                  <i class="fa-solid fa-feather-pointed"></i> <span data-translate-key="wisdom_title">Spiritual Wisdom</span>
+                </h3>
+                <p class="quote-text" data-translate-key="wisdom_quote">
+                  "Do not be afraid of the combat, and do not run away from it. If you fall, get up again, pray to the Lord, and push forward. The Savior is always near to help you."
+                </p>
+              </div>
+              <span class="quote-author" data-translate-key="wisdom_author">— St. Anthony the Great</span>
+            </div>
+          </div>
+
+          <!-- Katameros / Readings Card -->
+          <div class="glass-card katameros-card">
+            <div>
+              <h3 class="card-title">
+                <i class="fa-solid fa-book-bible"></i> <span data-translate-key="katameros_title">Katameros (Daily Reading)</span>
+              </h3>
+              <div class="katameros-verse">
+                <strong style="color: var(--accent);" data-translate-key="psalm_heading">Psalm 23:1-3</strong>
+                <p style="font-style: italic; margin-top: 0.25rem;" data-translate-key="psalm_text">"The Lord is my shepherd; I shall not want. He makes me to lie down in green pastures; He leads me beside the still waters..."</p>
+              </div>
+              <div class="katameros-verse" style="margin-bottom: 0;">
+                <strong style="color: var(--accent);" data-translate-key="john_heading">John 15:5</strong>
+                <p style="font-style: italic; margin-top: 0.25rem;" data-translate-key="john_text">"I am the vine, you are the branches. He who abides in Me, and I in him, bears much fruit; for without Me you can do nothing."</p>
+              </div>
+            </div>
+            <a href="#" class="btn btn-outline btn-sm" style="margin-top: 1rem; align-self: flex-start;">
+              <span data-translate-key="read_full">Read Full Katameros</span> <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+
+        </section>
+
+        <!-- Services & Announcements Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+          
+          <!-- Liturgies and Services Schedules -->
+          <section class="glass-card">
+            <h3 class="card-title" style="margin-bottom: 1.25rem;">
+              <i class="fa-solid fa-calendar-check"></i> <span data-translate-key="book_liturgy">Book Divine Liturgy</span>
+            </h3>
+            
+            <div class="booking-list">
+              <div class="booking-item">
+                <div class="booking-info">
+                  <span class="booking-date" data-translate-key="sunday_liturgy">Sunday Liturgy - June 14</span>
+                  <span class="booking-title" data-translate-key="main_hall">Main Hall (Coptic/English)</span>
+                  <span class="booking-capacity" data-translate-key="capacity_120">Capacity: 120/150 booked</span>
+                </div>
+                <button class="btn btn-accent btn-sm" data-translate-key="book_space">Book Space</button>
+              </div>
+
+              <div class="booking-item">
+                <div class="booking-info">
+                  <span class="booking-date" data-translate-key="wednesday_liturgy">Wednesday Liturgy - June 17</span>
+                  <span class="booking-title" data-translate-key="chapel">St. Mary Chapel (Arabic/Coptic)</span>
+                  <span class="booking-capacity" data-translate-key="capacity_15">Capacity: 15/40 booked</span>
+                </div>
+                <button class="btn btn-accent btn-sm" data-translate-key="book_space">Book Space</button>
+              </div>
+
+              <div class="booking-item">
+                <div class="booking-info">
+                  <span class="booking-date" data-translate-key="feast_liturgy">Feast of Ascension Liturgy - June 18</span>
+                  <span class="booking-title" data-translate-key="sanctuary">Main Sanctuary (Feast Liturgy)</span>
+                  <span class="booking-capacity" data-translate-key="capacity_45">Capacity: 45/200 booked</span>
+                </div>
+                <button class="btn btn-accent btn-sm" data-translate-key="book_space">Book Space</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Announcements Board -->
+          <section class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h3 class="card-title" style="margin-bottom: 1.25rem;">
+                <i class="fa-solid fa-bullhorn"></i> <span data-translate-key="notice_board">Church Notice Board</span>
+              </h3>
+              
+              <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                
+                <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+                  <span style="font-size: 0.75rem; color: var(--accent); font-weight: 600; text-transform: uppercase;" data-translate-key="retreat_badge">Retreat Announcement</span>
+                  <h4 style="font-family: var(--font-sans); font-size: 0.95rem; margin-top: 0.1rem; color: var(--text-primary);" data-translate-key="retreat_title">Youth Spiritual Retreat 2026</h4>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;" data-translate-key="retreat_text">
+                    Registration for our Summer Youth Retreat is officially open. The retreat will take place from July 24-26. Speak with Father Antonios to register.
+                  </p>
+                </div>
+
+                <div>
+                  <span style="font-size: 0.75rem; color: var(--accent); font-weight: 600; text-transform: uppercase;" data-translate-key="bible_badge">Bible Study</span>
+                  <h4 style="font-family: var(--font-sans); font-size: 0.95rem; margin-top: 0.1rem; color: var(--text-primary);" data-translate-key="bible_title">Summer Book study on Isaiah</h4>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;" data-translate-key="bible_text">
+                    Every Thursday evening at 7:30 PM in the Fellowship Hall. Bring your own Bible. Live stream will also be available on our channel.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+            
+            <a href="#" style="font-size: 0.85rem; color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem; margin-top: 1rem; align-self: flex-start;">
+              <span data-translate-key="view_notices">View all notices</span> <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem;"></i>
+            </a>
+          </section>
+
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Custom Core Script -->
+  <script src="js/main.js"></script>
+</body>
+</html>

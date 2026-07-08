@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>At Church - Access Portal</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body class="auth-page shared-bg">
+
+  <div class="auth-wrapper">
+    <div class="glass-card auth-card fade-in">
+
+      <div class="auth-header">
+        <div class="floating-logo">
+          <img src="images/logo.png" alt="At Church Logo">
+        </div>
+        <h1 class="coptic-title" data-translate-key="title">AT CHURCH</h1>
+        <p class="subtitle" data-translate-key="subtitle">الأقباط الأرثوذكس</p>
+        <p class="slogan" data-translate-key="slogan">"راسخون في الإيمان، متجذرون في المحبة."</p>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login" onclick="switchTab('login')" data-translate-key="tab_login">Sign In
+        </div>
+        <div class="auth-tab" id="tab-register" onclick="switchTab('register')" data-translate-key="tab_register">New
+          Account</div>
+      </div>
+
+      <div id="auth-alert" class="hidden">
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="login-identifier" data-translate-key="identifier_label">Email, Phone, or Username</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="login-identifier" class="auth-input ltr-input" placeholder="Email, phone number, or username" required>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <label class="form-label" for="login-password" style="margin-bottom: 0;"
+              data-translate-key="password_label">Password</label>
+            <a href="#" onclick="switchTab('forgot'); return false;"
+              style="font-size: 0.75rem; color: var(--accent); font-weight: 600;"
+              data-translate-key="forgot_password">Forgot?</a>
+          </div>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="login-password" class="auth-input ltr-input" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          <span data-translate-key="btn_signin">Sign In</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </button>
+
+        <div
+          style="text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); background-color: var(--bg-tertiary); padding: 0.75rem; border-radius: 12px; border: 1px dashed var(--border-color);">
+          <i class="fa-solid fa-circle-info" style="color: var(--accent);"></i> <span
+            data-translate-key="demo_login_prefix">Demo login:</span>
+          <strong>admin@church.com</strong> / <strong>admin123</strong>
+        </div>
+      </form>
+
+      <form id="register-form" class="hidden" onsubmit="handleMultiStepRegister(event)">
+        <div class="register-progress">
+          <div class="progress-bar-fill" id="register-progress-fill" style="width: 10%;"></div>
+        </div>
+        <div class="step-indicator" id="step-indicator-text"
+          style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 600;">
+          Step 1 of 10</div>
+
+        <div class="register-step active" id="reg-step-1">
+          <div class="form-group">
+            <label class="form-label" for="reg-arabic-name" data-translate-key="reg_arabic_name_label">الاسم رباعي
+              بالعربية</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="reg-arabic-name" class="auth-input" placeholder="اكتب اسمك رباعي باللغة العربية"
+                dir="rtl">
+            </div>
+            <div class="error-msg hidden" id="err-arabic-name"
+              style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+          </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-2">
+          <div class="form-group">
+            <label class="form-label" for="reg-english-name" data-translate-key="reg_english_name_label">Full Name in
+              English</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="reg-english-name" class="auth-input"
+                placeholder="Enter your quadruple name in English">
+            </div>
+            <div class="error-msg hidden" id="err-english-name"
+              style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+          </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-3">
+          <div class="form-group">
+            <label class="form-label" for="reg-dob" data-translate-key="reg_dob_label">Date of Birth</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-calendar"></i>
+              <input type="date" id="reg-dob" class="auth-input" onchange="calculateAge()">
+            </div>
+            <div id="age-display"
+              style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--accent); font-weight: 500; text-align: center;">
+            </div>
+            <div class="error-msg hidden" id="err-dob"
+              style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;">
+            </div>
+          </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-4">
+          <div class="form-group" id="phone-input-group">
+            <label class="form-label" for="reg-phone" data-translate-key="reg_phone_label">WhatsApp Number</label>
+            <div class="custom-phone-layout" style="margin-bottom: 1.25rem; padding: 0.5rem 0;">
+              <!-- Country Dropdown -->
+              <div
+                style="position: relative; padding-bottom: 0.25rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem;">
+                <select id="country-code-select"
+                  style="width: 100%; appearance: none; border: none; background: transparent; font-size: 1rem; color: var(--text-dark); cursor: pointer; outline: none; padding-right: 1.5rem;"
+                  onchange="updatePhonePlaceholder(this)">
+                  <option value="+20">Egypt</option>
+                  <option value="+1">United States</option>
+                  <option value="+44">United Kingdom</option>
+                  <option value="+971">United Arab Emirates</option>
+                  <option value="+966">Saudi Arabia</option>
+                  <option value="+61">Australia</option>
+                  <option value="+49">Germany</option>
+                  <option value="+93">Afghanistan</option>
+                  <option value="+355">Albania</option>
+                  <option value="+213">Algeria</option>
+                  <option value="+376">Andorra</option>
+                  <option value="+244">Angola</option>
+                  <option value="+54">Argentina</option>
+                  <option value="+374">Armenia</option>
+                  <option value="+43">Austria</option>
+                  <option value="+994">Azerbaijan</option>
+                  <option value="+973">Bahrain</option>
+                  <option value="+880">Bangladesh</option>
+                  <option value="+375">Belarus</option>
+                  <option value="+32">Belgium</option>
+                  <option value="+501">Belize</option>
+                  <option value="+229">Benin</option>
+                  <option value="+975">Bhutan</option>
+                  <option value="+591">Bolivia</option>
+                  <option value="+387">Bosnia and Herzegovina</option>
+                  <option value="+267">Botswana</option>
+                  <option value="+55">Brazil</option>
+                  <option value="+673">Brunei</option>
+                  <option value="+359">Bulgaria</option>
+                  <option value="+226">Burkina Faso</option>
+                  <option value="+257">Burundi</option>
+                  <option value="+855">Cambodia</option>
+                  <option value="+237">Cameroon</option>
+                  <option value="+1">Canada</option>
+                  <option value="+236">Central African Republic</option>
+                  <option value="+235">Chad</option>
+                  <option value="+56">Chile</option>
+                  <option value="+86">China</option>
+                  <option value="+57">Colombia</option>
+                  <option value="+269">Comoros</option>
+                  <option value="+242">Congo</option>
+                  <option value="+506">Costa Rica</option>
+                  <option value="+385">Croatia</option>
+                  <option value="+53">Cuba</option>
+                  <option value="+357">Cyprus</option>
+                  <option value="+420">Czech Republic</option>
+                  <option value="+45">Denmark</option>
+                  <option value="+253">Djibouti</option>
+                  <option value="+593">Ecuador</option>
+                  <option value="+503">El Salvador</option>
+                  <option value="+240">Equatorial Guinea</option>
+                  <option value="+291">Eritrea</option>
+                  <option value="+372">Estonia</option>
+                  <option value="+268">Eswatini</option>
+                  <option value="+251">Ethiopia</option>
+                  <option value="+679">Fiji</option>
+                  <option value="+358">Finland</option>
+                  <option value="+33">France</option>
+                  <option value="+241">Gabon</option>
+                  <option value="+220">Gambia</option>
+                  <option value="+995">Georgia</option>
+                  <option value="+233">Ghana</option>
+                  <option value="+30">Greece</option>
+                  <option value="+502">Guatemala</option>
+                  <option value="+224">Guinea</option>
+                  <option value="+245">Guinea-Bissau</option>
+                  <option value="+592">Guyana</option>
+                  <option value="+509">Haiti</option>
+                  <option value="+504">Honduras</option>
+                  <option value="+36">Hungary</option>
+                  <option value="+354">Iceland</option>
+                  <option value="+91">India</option>
+                  <option value="+62">Indonesia</option>
+                  <option value="+98">Iran</option>
+                  <option value="+964">Iraq</option>
+                  <option value="+353">Ireland</option>
+                  <option value="+972">Israel</option>
+                  <option value="+39">Italy</option>
+                  <option value="+81">Japan</option>
+                  <option value="+962">Jordan</option>
+                  <option value="+7">Kazakhstan</option>
+                  <option value="+254">Kenya</option>
+                  <option value="+686">Kiribati</option>
+                  <option value="+965">Kuwait</option>
+                  <option value="+996">Kyrgyzstan</option>
+                  <option value="+856">Laos</option>
+                  <option value="+371">Latvia</option>
+                  <option value="+961">Lebanon</option>
+                  <option value="+266">Lesotho</option>
+                  <option value="+231">Liberia</option>
+                  <option value="+218">Libya</option>
+                  <option value="+423">Liechtenstein</option>
+                  <option value="+370">Lithuania</option>
+                  <option value="+352">Luxembourg</option>
+                  <option value="+261">Madagascar</option>
+                  <option value="+265">Malawi</option>
+                  <option value="+60">Malaysia</option>
+                  <option value="+960">Maldives</option>
+                  <option value="+223">Mali</option>
+                  <option value="+356">Malta</option>
+                  <option value="+692">Marshall Islands</option>
+                  <option value="+222">Mauritania</option>
+                  <option value="+230">Mauritius</option>
+                  <option value="+52">Mexico</option>
+                  <option value="+691">Micronesia</option>
+                  <option value="+373">Moldova</option>
+                  <option value="+377">Monaco</option>
+                  <option value="+976">Mongolia</option>
+                  <option value="+382">Montenegro</option>
+                  <option value="+212">Morocco</option>
+                  <option value="+258">Mozambique</option>
+                  <option value="+95">Myanmar</option>
+                  <option value="+264">Namibia</option>
+                  <option value="+674">Nauru</option>
+                  <option value="+977">Nepal</option>
+                  <option value="+31">Netherlands</option>
+                  <option value="+64">New Zealand</option>
+                  <option value="+505">Nicaragua</option>
+                  <option value="+227">Niger</option>
+                  <option value="+234">Nigeria</option>
+                  <option value="+850">North Korea</option>
+                  <option value="+389">North Macedonia</option>
+                  <option value="+47">Norway</option>
+                  <option value="+968">Oman</option>
+                  <option value="+92">Pakistan</option>
+                  <option value="+680">Palau</option>
+                  <option value="+970">Palestine</option>
+                  <option value="+507">Panama</option>
+                  <option value="+675">Papua New Guinea</option>
+                  <option value="+595">Paraguay</option>
+                  <option value="+51">Peru</option>
+                  <option value="+63">Philippines</option>
+                  <option value="+48">Poland</option>
+                  <option value="+351">Portugal</option>
+                  <option value="+974">Qatar</option>
+                  <option value="+40">Romania</option>
+                  <option value="+7">Russia</option>
+                  <option value="+250">Rwanda</option>
+                  <option value="+685">Samoa</option>
+                  <option value="+378">San Marino</option>
+                  <option value="+239">Sao Tome and Principe</option>
+                  <option value="+221">Senegal</option>
+                  <option value="+381">Serbia</option>
+                  <option value="+248">Seychelles</option>
+                  <option value="+232">Sierra Leone</option>
+                  <option value="+65">Singapore</option>
+                  <option value="+421">Slovakia</option>
+                  <option value="+386">Slovenia</option>
+                  <option value="+677">Solomon Islands</option>
+                  <option value="+252">Somalia</option>
+                  <option value="+27">South Africa</option>
+                  <option value="+82">South Korea</option>
+                  <option value="+211">South Sudan</option>
+                  <option value="+34">Spain</option>
+                  <option value="+94">Sri Lanka</option>
+                  <option value="+249">Sudan</option>
+                  <option value="+597">Suriname</option>
+                  <option value="+46">Sweden</option>
+                  <option value="+41">Switzerland</option>
+                  <option value="+963">Syria</option>
+                  <option value="+992">Tajikistan</option>
+                  <option value="+255">Tanzania</option>
+                  <option value="+66">Thailand</option>
+                  <option value="+670">Timor-Leste</option>
+                  <option value="+228">Togo</option>
+                  <option value="+676">Tonga</option>
+                  <option value="+216">Tunisia</option>
+                  <option value="+90">Turkey</option>
+                  <option value="+993">Turkmenistan</option>
+                  <option value="+688">Tuvalu</option>
+                  <option value="+256">Uganda</option>
+                  <option value="+380">Ukraine</option>
+                  <option value="+598">Uruguay</option>
+                  <option value="+998">Uzbekistan</option>
+                  <option value="+678">Vanuatu</option>
+                  <option value="+379">Vatican City</option>
+                  <option value="+58">Venezuela</option>
+                  <option value="+84">Vietnam</option>
+                  <option value="+967">Yemen</option>
+                  <option value="+260">Zambia</option>
+                  <option value="+263">Zimbabwe</option>
+                </select>
+                <i class="fa-solid fa-chevron-down"
+                  style="position: absolute; right: 4px; top: 40%; transform: translateY(-50%); pointer-events: none; color: var(--text-muted); font-size: 0.8rem;"></i>
+              </div>
+
+              <!-- Code and Number -->
+              <div style="display: flex; align-items: flex-end; gap: 1rem;">
+                <div
+                  style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem; min-width: 50px; text-align: center; font-size: 1.1rem; color: var(--text-dark); font-weight: 500;"
+                  id="country-code-display">+20</div>
+                <div style="flex: 1; position: relative;">
+                  <input type="tel" id="reg-phone" class="ltr-input" placeholder="123 456 7890"
+                    style="width: 100%; border: none; border-bottom: 2px solid var(--primary); background: transparent; font-size: 1.1rem; color: var(--text-dark); padding: 0.25rem 0; outline: none; letter-spacing: 1px; transition: border-color 0.2s;"
+                    onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--primary)'">
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block" style="margin-top: 0.75rem;" onclick="sendOtp()"
+              id="btn-send-otp"><span data-translate-key="btn_send_otp">Send Verification Code</span></button>
+            <div id="recaptcha-container" style="margin-top: 0.5rem;"></div>
+            <div class="error-msg hidden" id="err-phone"
+              style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+          </div>
+
+          <div class="form-group hidden" id="otp-input-group"
+            style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-color);">
+            <label class="form-label" for="reg-otp" data-translate-key="reg_otp_label">Enter 6-digit Code</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-key"></i>
+              <input type="text" id="reg-otp" class="auth-input ltr-input" placeholder="123456" maxlength="6">
+            </div>
+            <div class="error-msg hidden" id="err-otp"
+              style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;">
+            </div>
+            <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.5rem; text-align: center;"
+              id="phone-otp-notice">Please enter the 6-digit code sent to your phone.</p>
+          </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-5">
+          <div class="form-group mt-3">
+          <label class="form-label" for="reg-email" data-translate-key="reg_email_label">Email Address
+            (Optional)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="reg-email" class="auth-input ltr-input" placeholder="name@example.com">
+          </div>
+          <div class="error-msg hidden" id="err-email"
+            style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+
+          <button type="button" class="btn btn-secondary btn-block" style="margin-top: 0.75rem;"
+            onclick="sendEmailOtp()" id="btn-send-email-otp"><span data-translate-key="btn_send_email_link">Send Verification Link</span></button>
+        </div>
+
+        <div class="form-group hidden" id="email-link-sent-group"
+          style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-color); text-align: center;">
+          <p style="font-size: 0.9rem; color: var(--success); font-weight: 600;">
+            <i class="fa-solid fa-envelope-circle-check"></i> <span data-translate-key="email_link_sent_msg">Verification link sent! Please check your email inbox and click the link to verify your email.</span>
+          </p>
+        </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-6">
+        <div class="form-group">
+          <label class="form-label" for="reg-education" data-translate-key="reg_education_label">School/College</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <input type="text" id="reg-education" class="auth-input" placeholder="Search institution...">
+          </div>
+          <div class="error-msg hidden" id="err-education"
+            style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+        </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-7">
+        <div class="form-group">
+          <label class="form-label" for="reg-address" data-translate-key="reg_address_label">Address for
+            Visitation</label>
+          <textarea id="reg-address" class="auth-input" rows="2" placeholder="Enter your detailed address..."
+            style="padding: 1rem; border-radius: 12px; resize: none;"></textarea>
+          <div class="error-msg hidden" id="err-address"
+            style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <button type="button" class="btn btn-secondary btn-block" onclick="getCoordinates()" id="btn-get-coords">
+            <i class="fa-solid fa-location-dot"></i> <span data-translate-key="btn_get_coordinates">Get Current
+              Location (Coordinates)</span>
+          </button>
+          <p id="reg-coords-display" class="hidden"
+            style="font-size: 0.8rem; color: var(--success); margin-top: 0.5rem; text-align: center; font-weight: 600;">
+            <i class="fa-solid fa-check-circle"></i> <span data-translate-key="reg_coords_captured">Coordinates
+              captured.</span></p>
+        </div>
+        </div>
+
+        <div class="register-step hidden" id="reg-step-8">
+      <div class="form-group">
+        <label class="form-label" for="reg-gov" data-translate-key="reg_gov_label">Church Selection</label>
+        <div class="input-wrapper" style="margin-bottom: 0.5rem;">
+          <i class="fa-solid fa-map"></i>
+          <select id="reg-gov" class="auth-input" onchange="populateChurchesForGov()">
+            <option value="" data-translate-key="reg_gov_placeholder">Select Governorate...</option>
+            <option value="Alexandria">Alexandria</option>
+            <option value="Cairo">Cairo</option>
+            <option value="Giza">Giza</option>
+            <option value="Beheira">Beheira</option>
+            <option value="Damietta">Damietta</option>
+            <option value="Dakahlia">Dakahlia</option>
+            <option value="Gharbia">Gharbia</option>
+            <option value="Monufia">Monufia</option>
+            <option value="Qalyubia">Qalyubia</option>
+            <option value="Sharqia">Sharqia</option>
+            <option value="Kafr El Sheikh">Kafr El Sheikh</option>
+            <option value="Fayoum">Fayoum</option>
+            <option value="Minya">Minya</option>
+            <option value="Asyut">Asyut</option>
+            <option value="Sohag">Sohag</option>
+            <option value="Qena">Qena</option>
+            <option value="Luxor">Luxor</option>
+            <option value="Aswan">Aswan</option>
+            <option value="Red Sea">Red Sea</option>
+            <option value="Suez">Suez</option>
+            <option value="Port Said">Port Said</option>
+            <option value="Ismailia">Ismailia</option>
+            <option value="North Sinai">North Sinai</option>
+            <option value="South Sinai">South Sinai</option>
+            <option value="New Valley">New Valley</option>
+          </select>
+        </div>
+        <div class="error-msg hidden" id="err-gov"
+          style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;">
+        </div>
+
+        <div class="input-wrapper hidden" style="margin-bottom: 0.5rem;" id="markaz-wrapper">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <select id="reg-markaz" class="auth-input" onchange="populateChurchesForMarkaz()">
+            <option value="" data-translate-key="reg_markaz_placeholder">Select District/Diocese...</option>
+          </select>
+        </div>
+
+        <div class="input-wrapper hidden" style="margin-bottom: 0.5rem;" id="church-search-wrapper">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" id="church-search" class="auth-input" placeholder="Search church by name..."
+            oninput="filterChurches()">
+        </div>
+
+        <div class="input-wrapper hidden" style="margin-bottom: 0.5rem;" id="church-wrapper">
+          <i class="fa-solid fa-church"></i>
+          <select id="reg-church" class="auth-input" onchange="handleChurchSelect()">
+            <option value="" data-translate-key="reg_church_placeholder">Select a governorate first.</option>
+          </select>
+        </div>
+        <div class="error-msg hidden" id="err-church"
+          style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+
+        <div id="selected-churches-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;">
+        </div>
+      </div>
+    </div>
+
+    <div class="register-step hidden" id="reg-step-9">
+      <!-- Step 9: Profile Photo -->
+      <div class="form-group mt-3" style="text-align: center;">
+        <label class="form-label" data-translate-key="reg_photo_label"
+          style="display:block; margin-bottom:0.75rem;">Profile Photo</label>
+
+        <!-- Circle preview -->
+        <div id="photo-preview-wrap" style="
+              position: relative;
+              width: 140px; height: 140px;
+              margin: 0 auto 1rem;
+              border-radius: 50%;
+              overflow: hidden;
+              background: var(--bg-tertiary);
+              border: 3px solid var(--border-color);
+              cursor: grab;
+              user-select: none;
+            ">
+          <canvas id="photo-canvas" width="140" height="140" style="display:block; border-radius:50%;"></canvas>
+          <div id="photo-placeholder" style="
+                position:absolute; inset:0;
+                display:flex; flex-direction:column;
+                align-items:center; justify-content:center;
+                color:var(--text-muted);
+              ">
+            <i class="fa-solid fa-user" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+            <span style="font-size:0.7rem;" data-translate-key="reg_photo_placeholder">Add photo</span>
+          </div>
+        </div>
+
+        <!-- Zoom + Rotate controls (hidden until photo loaded) -->
+        <div id="photo-editor-controls" class="hidden" style="margin-bottom:0.75rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+            <i class="fa-solid fa-minus" style="color:var(--text-muted); font-size:0.75rem; cursor:pointer;"
+              onclick="photoZoom(-0.1)"></i>
+            <input type="range" id="photo-zoom-slider" min="0.5" max="3" step="0.05" value="1"
+              oninput="photoZoomSlider(this.value)" style="flex:1; accent-color:var(--primary); cursor:pointer;">
+            <i class="fa-solid fa-plus" style="color:var(--text-muted); font-size:0.75rem; cursor:pointer;"
+              onclick="photoZoom(0.1)"></i>
+          </div>
+          <div style="display:flex; justify-content:center; gap:1.5rem;">
+            <button type="button" onclick="photoRotate(-90)" class="btn btn-outline btn-sm">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span data-translate-key="btn_rotate">Rotate</span>
+            </button>
+            <button type="button" onclick="removePhoto()" class="btn btn-outline btn-sm"
+              style="color:var(--crimson); border-color:var(--crimson);">
+              <i class="fa-solid fa-trash"></i>
+              <span data-translate-key="btn_remove_photo">Remove</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Upload / Camera buttons -->
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+          <button type="button" class="btn btn-outline btn-sm"
+            onclick="document.getElementById('photo-file-input').click()">
+            <i class="fa-solid fa-upload"></i>
+            <span data-translate-key="btn_upload_photo">Upload Photo</span>
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="openCamera()">
+            <i class="fa-solid fa-camera"></i>
+            <span data-translate-key="btn_take_photo">Take Photo</span>
+          </button>
+        </div>
+
+        <!-- Hidden file input -->
+        <input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+
+        <!-- Camera modal -->
+        <div id="camera-modal" class="hidden" style="
+              position:fixed; inset:0; z-index:10000;
+              background:rgba(0,0,0,0.85);
+              display:flex; flex-direction:column;
+              align-items:center; justify-content:center;
+              gap:1rem;
+            ">
+          <video id="camera-video" autoplay playsinline style="
+                width:280px; height:280px;
+                border-radius:50%; object-fit:cover;
+                border:4px solid var(--primary);
+              "></video>
+          <div style="display:flex; gap:1rem;">
+            <button type="button" class="btn btn-primary" onclick="captureFromCamera()">
+              <i class="fa-solid fa-circle-dot"></i>
+              <span data-translate-key="btn_capture">Capture</span>
+            </button>
+            <button type="button" class="btn btn-outline" style="color:#fff;border-color:#fff;" onclick="closeCamera()">
+              <i class="fa-solid fa-xmark"></i>
+              <span data-translate-key="btn_cancel">Cancel</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="error-msg hidden" id="err-photo"
+          style="color:var(--crimson-light);font-size:0.75rem;margin-top:0.5rem;"></div>
+      </div>
+    </div>
+
+    <div class="register-step hidden" id="reg-step-10">
+      <!-- Step 10: Password -->
+      <div class="form-group mt-3">
+        <label class="form-label" for="reg-password" data-translate-key="reg_password_label">Create Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="reg-password" class="auth-input ltr-input" placeholder="Min 6 characters"
+            oninput="checkPasswordStrength()">
+        </div>
+        <div class="error-msg hidden" id="err-password"
+          style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reg-confirm-password" data-translate-key="reg_confirm_password_label">Confirm
+          Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-shield-halved"></i>
+          <input type="password" id="reg-confirm-password" class="auth-input ltr-input" placeholder="Re-type password">
+        </div>
+        <div class="error-msg hidden" id="err-confirm-password"
+          style="color: var(--crimson-light); font-size: 0.75rem; margin-top: 0.25rem;"></div>
+      </div>
+
+      <!-- Password strength indicator -->
+      <div id="password-strength-bar" style="margin-top: -0.5rem; margin-bottom: 0.75rem;">
+        <div style="display: flex; gap: 4px; margin-bottom: 4px;">
+          <div id="strength-seg-1"
+            style="height: 4px; flex: 1; border-radius: 99px; background: var(--bg-tertiary); transition: background 0.3s;">
+          </div>
+          <div id="strength-seg-2"
+            style="height: 4px; flex: 1; border-radius: 99px; background: var(--bg-tertiary); transition: background 0.3s;">
+          </div>
+          <div id="strength-seg-3"
+            style="height: 4px; flex: 1; border-radius: 99px; background: var(--bg-tertiary); transition: background 0.3s;">
+          </div>
+          <div id="strength-seg-4"
+            style="height: 4px; flex: 1; border-radius: 99px; background: var(--bg-tertiary); transition: background 0.3s;">
+          </div>
+        </div>
+        <span id="strength-label" style="font-size: 0.72rem; color: var(--text-muted);"></span>
+      </div>
+    </div><!-- end reg-step-10 -->
+
+    <!-- Navigation Buttons (inside the form so submit works) -->
+    <div class="button-group" style="margin-top: 2rem; gap: 1rem;">
+      <div class="prev-btn-wrapper" style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+        <button type="button" class="btn btn-outline hidden" id="btn-prev-step" onclick="prevStep()"
+          data-translate-key="btn_back">Back</button>
+        <a href="#" class="hidden" id="btn-skip-step" onclick="skipStep(); return false;"
+          style="color: var(--text-muted); font-weight: 600; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+          data-translate-key="btn_skip">Skip</a>
+      </div>
+      <div class="next-btn-wrapper"
+        style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex: 1;">
+        <button type="button" class="btn btn-primary" id="btn-next-step" onclick="nextStep()"><span
+            data-translate-key="btn_next">Next</span> <i class="fa-solid fa-arrow-right"></i></button>
+        <button type="submit" class="btn btn-primary hidden" id="btn-submit-reg"><span
+            data-translate-key="btn_create_account">Create Account</span> <i class="fa-solid fa-user-plus"></i></button>
+      </div>
+    </div>
+  </form>
+
+  <form id="forgot-form" class="hidden" onsubmit="handleForgot(event)">
+    <!-- Step 1: Email Input -->
+    <div id="forgot-step-1">
+      <div style="margin-bottom: 1.5rem; text-align: center;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;"
+          data-translate-key="forgot_title">Reset Password</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);" data-translate-key="forgot_instructions">Enter
+          your registered email, phone number, or username to reset your password.</p>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label" for="forgot-identifier" data-translate-key="identifier_label">Email, Phone, or Username</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="forgot-identifier" class="auth-input ltr-input" placeholder="Email, phone number, or username">
+        </div>
+      </div>
+
+      <button type="button" onclick="verifyForgotEmail()" class="btn btn-primary btn-block"
+        style="margin-bottom: 1.25rem;">
+        <span data-translate-key="btn_reset_password">Reset Password</span> <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Intermediate Step: Choose Delivery Method -->
+    <div id="forgot-step-choose" class="hidden">
+      <div style="margin-bottom: 1.5rem; text-align: center;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;"
+          data-translate-key="forgot_title">Reset Password</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">How would you like to receive your reset code?</p>
+      </div>
+
+      <button type="button" class="btn btn-outline btn-block" style="margin-bottom: 1rem;" onclick="sendForgotCode('email')">
+        <i class="fa-solid fa-envelope"></i> Send to Email
+      </button>
+      <button type="button" class="btn btn-outline btn-block" style="margin-bottom: 1.25rem;" onclick="sendForgotCode('phone')">
+        <i class="fa-solid fa-phone"></i> Send to Phone Number
+      </button>
+    </div>
+
+    <!-- Step 2: Code & New Password -->
+    <div id="forgot-step-2" class="hidden">
+      <div style="margin-bottom: 1.5rem; text-align: center;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;"
+          data-translate-key="forgot_title">Reset Password</h2>
+        <p id="forgot-step2-instructions" style="font-size: 0.85rem; color: var(--text-secondary);" data-translate-key="forgot_instructions_step2">
+          A temporary verification code has been sent.</p>
+        <span
+          style="font-size: 0.75rem; color: var(--accent); font-weight: bold; background: var(--bg-tertiary); padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 4px;"
+          data-translate-key="mock_code_notice">Mock Code: 123456</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="forgot-code" data-translate-key="code_label">Verification Code</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-key"></i>
+          <input type="text" id="forgot-code" class="auth-input ltr-input" placeholder="Enter 123456">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="forgot-new-password" data-translate-key="new_password_label">New
+          Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="forgot-new-password" class="auth-input ltr-input" placeholder="Min 6 characters"
+            minlength="6">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label" for="forgot-confirm-password" data-translate-key="confirm_password_label">Confirm
+          Password</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-shield-halved"></i>
+          <input type="password" id="forgot-confirm-password" class="auth-input ltr-input"
+            placeholder="Re-type password" minlength="6">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" style="margin-bottom: 1.25rem;">
+        <span data-translate-key="btn_submit_new_password">Update Password</span> <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="#" onclick="switchTab('login'); return false;"
+        style="font-size: 0.85rem; color: var(--accent); font-weight: 600;" data-translate-key="back_to_login">Back
+        to Sign In</a>
+    </div>
+  </form>
+
+  </div>
+
+  <div class="auth-footer fade-in" style="animation-delay: 0.2s; opacity: 0;">
+    <div class="language-dropdown-container">
+      <button class="language-trigger-btn" id="language-btn">
+        <span id="current-language">English (United States)</span>
+        <i class="fa-solid fa-caret-down"></i>
+      </button>
+      <div class="language-dropdown-menu hidden" id="language-menu">
+        <div class="language-item" data-lang="en-us">English (United States)</div>
+        <div class="language-item" data-lang="en-gb">English (United Kingdom)</div>
+        <div class="language-item" data-lang="ar-eg">العربية (مصر)</div>
+        <div class="language-item" data-lang="fr">Français</div>
+        <div class="language-item" data-lang="de">Deutsch</div>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <a href="#" data-translate-key="help">Help</a>
+      <a href="#" data-translate-key="privacy">Privacy</a>
+      <a href="#" data-translate-key="terms">Terms</a>
+    </div>
+  </div>
+  </div>
+
+  <!-- Dark / Light Mode Toggle (fixed to right edge of page) -->
+  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode" aria-label="Toggle dark/light mode">
+    <i class="fa-solid fa-sun" id="theme-icon-sun"></i>
+    <i class="fa-solid fa-moon" id="theme-icon-moon"></i>
+  </button>
+
+  <!-- Firebase SDK Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <script src="js/register.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // --- Dark / Light Mode Toggle ---
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('preferredTheme', theme);
+      const sunIcon = document.getElementById('theme-icon-sun');
+      const moonIcon = document.getElementById('theme-icon-moon');
+      if (theme === 'dark') {
+        sunIcon.style.opacity = '0';
+        sunIcon.style.transform = 'rotate(90deg) scale(0.5)';
+        moonIcon.style.opacity = '1';
+        moonIcon.style.transform = 'rotate(0deg) scale(1)';
+      } else {
+        sunIcon.style.opacity = '1';
+        sunIcon.style.transform = 'rotate(0deg) scale(1)';
+        moonIcon.style.opacity = '0';
+        moonIcon.style.transform = 'rotate(-90deg) scale(0.5)';
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+
+    // Apply saved theme on load
+    (function () {
+      const saved = localStorage.getItem('preferredTheme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+    })();
+  </script>
+</body>
+
+</html>

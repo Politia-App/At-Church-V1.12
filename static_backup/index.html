@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>At Church - Loading...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* --- Color Settings (easily editable from here) --- */
+        :root {
+            /* Primary theme color (golden-brown accent matching the church aesthetic) */
+            --theme-color-hex: #b45309;
+            /* Same color in RGB format to dynamically configure shadow transparency */
+            --theme-color-rgb: 180, 83, 9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        @keyframes logoEntrance {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* The shadow now takes its color from the CSS variables defined above */
+        @keyframes glowPulse {
+            0% {
+                filter: drop-shadow(0 0 0 rgba(var(--theme-color-rgb), 0.4));
+            }
+
+            70% {
+                filter: drop-shadow(0 0 30px rgba(var(--theme-color-rgb), 0.7));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 0 rgba(var(--theme-color-rgb), 0));
+            }
+        }
+
+        @keyframes screenExit {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.1);
+                visibility: hidden;
+            }
+        }
+
+        .logo-container {
+            animation: logoEntrance 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .logo-icon {
+            animation: glowPulse 2.5s infinite;
+        }
+
+        .exit-animation {
+            animation: screenExit 0.8s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+        }
+
+        /* The spinner/loader now takes its color from the CSS variables defined above */
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid rgba(var(--theme-color-rgb), 0.2);
+            border-top-color: var(--theme-color-hex);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex h-screen w-screen items-center justify-center relative shared-bg" id="splash-body">
+    <div class="flex flex-col items-center justify-center logo-container" id="splash-content">
+        <img src="images/logo.png" alt="At Church Logo" class="logo-icon h-48 w-48 object-contain mb-6 drop-shadow-2xl">
+        <h1 class="font-serif text-5xl font-bold text-gray-900 tracking-tight">At Church - Coptic Orthodox</h1>
+        <p class="text-base text-gray-600 mt-2 mb-8 tracking-widest uppercase font-medium">Anchored in Faith, Connected in Love</p>
+        <div class="spinner"></div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Apply language layout direction immediately
+            const lang = localStorage.getItem('preferredLanguage') || 'en-us';
+            if (lang === 'ar-eg') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            let targetPage = "login.html";
+
+            // Listen for Firebase Auth state to resolve
+            window.firebaseAuth.onAuthStateChanged((user) => {
+                targetPage = user ? "dashboard.html" : "login.html";
+            });
+            
+            // Wait for 2.5 seconds to show the entrance animation and logo
+            setTimeout(() => {
+                document.getElementById("splash-content").classList.add("exit-animation");
+            }, 2500);
+
+            // Redirect right after the exit animation completes
+            setTimeout(() => {
+                window.location.href = targetPage;
+            }, 3300);
+        });
+    </script>
+</body>
+</html>
