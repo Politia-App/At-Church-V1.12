@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "@/styles/style.css";
-import "@/styles/login.css";
-import { ThemeProvider } from "@/context/ThemeContext";
-import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata: Metadata = {
   title: "At Church - Coptic Orthodox",
@@ -16,26 +12,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <html lang="en">
-          <head>
-            {/* FontAwesome */}
-            <link
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-              rel="stylesheet"
-            />
-            {/* Google Fonts */}
-            <link
-              href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
-              rel="stylesheet"
-            />
-          </head>
-          <body>
-            {children}
-          </body>
-        </html>
-      </LanguageProvider>
-    </ThemeProvider>
+    <html lang="en">
+      <head>
+        {/* FontAwesome */}
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+        />
+        {/* Google Fonts */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        {children}
+      </body>
+    </html>
   );
 }

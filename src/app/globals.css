@@ -7,6 +7,23 @@
   --theme-color-rgb: 180, 83, 9;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #090d16;
+}
+
+/* Standalone Dark Mode Shared Background */
+.shared-bg {
+  background-image: linear-gradient(rgba(9, 13, 22, 0.9), rgba(9, 13, 22, 0.97)), url('/images/splash-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
 @keyframes logoEntrance {
   0% {
     opacity: 0;
